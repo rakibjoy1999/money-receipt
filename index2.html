@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BD Medical Research and Consultancy - Money Receipt</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+body {
+  font-family: 'Times New Roman', serif;
+  background: #f2f2f2;
+  padding: 20px;
+}
+
+.container {
+  background: white;
+  max-width: 800px;
+  margin: auto;
+  padding: 25px;
+  border: 2px solid #000;
+}
+
+h1 {
+  text-align: center;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 8px;
+  margin: 5px 0;
+}
+
+button {
+  padding: 10px;
+  background: black;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.receipt {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #000;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>BD Medical Research and Consultancy</h1>
+
+  <input id="name" placeholder="Receiver Name">
+  <input id="amount" placeholder="Amount (TK)">
+  <input id="purpose" placeholder="Purpose">
+  <input id="date" type="date">
+
+  <button onclick="generateReceipt()">Generate Receipt</button>
+  <button onclick="downloadPDF()">Download PDF</button>
+
+  <div class="receipt" id="receipt">
+    Receipt will appear here...
+  </div>
+</div>
+
+<script>
+function generateReceipt(){
+  let name = document.getElementById("name").value;
+  let amount = document.getElementById("amount").value;
+  let purpose = document.getElementById("purpose").value;
+  let date = document.getElementById("date").value;
+
+  document.getElementById("receipt").innerHTML = `
+    <h2>Money Receipt</h2>
+    <p><b>Name:</b> ${name}</p>
+    <p><b>Amount:</b> ${amount} TK</p>
+    <p><b>Purpose:</b> ${purpose}</p>
+    <p><b>Date:</b> ${date}</p>
+    <br>
+    <p><b>BD Medical Research and Consultancy</b></p>
+  `;
+}
+
+function downloadPDF(){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.html(document.getElementById("receipt"), {
+    callback: function (doc) {
+      doc.save("money-receipt.pdf");
+    },
+    x: 10,
+    y: 10
+  });
+}
+</script>
+
+</body>
+</html>

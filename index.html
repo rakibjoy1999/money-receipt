@@ -1,130 +1,99 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Money Receipt Generator</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<meta charset="UTF-8">
+<title>BD Medical Research and Consultancy - Money Receipt</title>
 
-  <style>
-    body{
-      font-family: "Times New Roman", serif;
-      background:#f4f6f9;
-      padding:20px;
-    }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-    .box{
-      max-width:900px;
-      margin:auto;
-      background:white;
-      padding:20px;
-      border:2px solid black;
-    }
+<style>
+body {
+  font-family: 'Times New Roman', serif;
+  background: #f2f2f2;
+  padding: 20px;
+}
 
-    h1{
-      text-align:center;
-      margin:0;
-    }
+.container {
+  background: white;
+  max-width: 800px;
+  margin: auto;
+  padding: 25px;
+  border: 2px solid #000;
+}
 
-    input{
-      width:100%;
-      padding:8px;
-      margin:5px 0;
-    }
+h1 {
+  text-align: center;
+}
 
-    .btn{
-      padding:10px 15px;
-      background:black;
-      color:white;
-      border:none;
-      cursor:pointer;
-      margin-top:10px;
-    }
+input, textarea {
+  width: 100%;
+  padding: 8px;
+  margin: 5px 0;
+}
 
-    .receipt{
-      margin-top:20px;
-      padding:20px;
-      border:1px solid #000;
-    }
+button {
+  padding: 10px;
+  background: black;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
 
-    .row{
-      display:flex;
-      justify-content:space-between;
-    }
-  </style>
+.receipt {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #000;
+}
+</style>
 </head>
 
 <body>
 
-<div class="box">
+<div class="container">
+  <h1>BD Medical Research and Consultancy</h1>
 
-<h1>Money Receipt Generator</h1>
+  <input id="name" placeholder="Receiver Name">
+  <input id="amount" placeholder="Amount (TK)">
+  <input id="purpose" placeholder="Purpose">
+  <input id="date" type="date">
 
-<h3>Fill Information</h3>
+  <button onclick="generateReceipt()">Generate Receipt</button>
+  <button onclick="downloadPDF()">Download PDF</button>
 
-<input id="name" placeholder="Receiver Name">
-<input id="amount" placeholder="Amount (TK)">
-<input id="purpose" placeholder="Purpose">
-<input id="journal" placeholder="Journal Name">
-<input id="title" placeholder="Article Title">
-<input id="date" placeholder="Date">
-
-<button class="btn" onclick="generate()">Generate Receipt</button>
-<button class="btn" onclick="downloadPDF()">Download PDF</button>
-
-<div id="receipt" class="receipt">
-
-  <h2 style="text-align:center;">BD Medical Research</h2>
-  <p style="text-align:center;">Money Receipt</p>
-
-  <div class="row">
-    <div>Receipt No: <b>001</b></div>
-    <div>Date: <span id="rdate"></span></div>
+  <div class="receipt" id="receipt">
+    Receipt will appear here...
   </div>
-
-  <hr>
-
-  <p>Received With Thanks From: <b id="rname"></b></p>
-  <p>Amount: <b id="ramount"></b> TK</p>
-  <p>In Word: <b id="rword"></b></p>
-  <p>Purpose: <b id="rpurpose"></b></p>
-
-  <p>Journal: <b id="rjournal"></b></p>
-  <p>Article Title: <b id="rtitle"></b></p>
-
-  <br><br>
-
-  <div class="row">
-    <div>Checked By</div>
-    <div>Approved By</div>
-    <div>Received By</div>
-  </div>
-
-</div>
-
 </div>
 
 <script>
-function generate(){
+function generateReceipt(){
   let name = document.getElementById("name").value;
   let amount = document.getElementById("amount").value;
   let purpose = document.getElementById("purpose").value;
-  let journal = document.getElementById("journal").value;
-  let title = document.getElementById("title").value;
   let date = document.getElementById("date").value;
 
-  document.getElementById("rname").innerText = name;
-  document.getElementById("ramount").innerText = amount;
-  document.getElementById("rpurpose").innerText = purpose;
-  document.getElementById("rjournal").innerText = journal;
-  document.getElementById("rtitle").innerText = title;
-  document.getElementById("rdate").innerText = date;
-
-  document.getElementById("rword").innerText = amount + " Taka Only";
+  document.getElementById("receipt").innerHTML = `
+    <h2>Money Receipt</h2>
+    <p><b>Name:</b> ${name}</p>
+    <p><b>Amount:</b> ${amount} TK</p>
+    <p><b>Purpose:</b> ${purpose}</p>
+    <p><b>Date:</b> ${date}</p>
+    <br>
+    <p><b>BD Medical Research and Consultancy</b></p>
+  `;
 }
 
 function downloadPDF(){
-  let element = document.getElementById('receipt');
-  html2pdf().from(element).save('money-receipt.pdf');
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.html(document.getElementById("receipt"), {
+    callback: function (doc) {
+      doc.save("money-receipt.pdf");
+    },
+    x: 10,
+    y: 10
+  });
 }
 </script>
 
